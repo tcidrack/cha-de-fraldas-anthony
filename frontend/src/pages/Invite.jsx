@@ -202,11 +202,6 @@ export default function Invite() {
             <span>{tema.mimos.textoBotao}</span>
           </Link>
 
-          <div className="presentes-inline">
-            <span className="presentes-titulo">{tema.sugestoesPresente.titulo}</span>
-            <p className="presentes-texto">{tema.sugestoesPresente.texto}</p>
-          </div>
-
           <p className="mensagem-final">{tema.mensagemFinal}</p>
         </div>
       </div>

@@ -212,30 +212,6 @@ body {
   line-height: 1.35;
 }
 
-/* --- sugestoes de presente --- */
-.presentes-inline {
-  width: 74%;
-  margin-left: auto;
-  text-align: center;
-}
-
-.presentes-titulo {
-  display: inline-block;
-  background: var(--oliva);
-  color: var(--branco);
-  font-size: 15px;
-  font-weight: 600;
-  padding: 5px 14px;
-  border-radius: 6px;
-}
-
-.presentes-texto {
-  font-size: 21px;
-  font-weight: 600;
-  color: var(--oliva-escuro);
-  margin-top: 8px;
-}
-
 /* --- confirmar presenca --- */
 .acao-confirmar {
   margin: 4px auto 22px;
@@ -289,7 +265,7 @@ body {
 
 /* --- botao secundario: sugestoes de mimos --- */
 .acao-mimos {
-  margin: 10px auto 0;
+  margin: 10px auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -914,7 +890,6 @@ body {
   .selo-data  { width: 92px; height: 92px; }
   .selo-numero { font-size: 29px; }
   .selo-texto  { font-size: 14px; }
-  .presentes-texto { font-size: 19px; }
   .mensagem-final  { font-size: 28px; }
   .envelope        { max-width: 300px; height: 220px; }
   .envelope-corpo  { height: 165px; }

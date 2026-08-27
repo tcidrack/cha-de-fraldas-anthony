@@ -27,12 +27,6 @@ export const tema = {
     minuto: '00',
   },
 
-  // << EDITE AQUI >> bloco de sugestoes de presente
-  sugestoesPresente: {
-    titulo: 'Sugestões de presente',
-    texto: 'Fraldas P, M e G e Mimo',
-  },
-
   // << EDITE AQUI >> despedida no rodape do convite
   mensagemFinal: 'Espero por você!',
 
@@ -40,7 +34,7 @@ export const tema = {
   mimos: {
     textoBotao: 'Sugestões de mimos',
     titulo: 'Sugestões de mimos',
-    subtitulo: 'Se quiser trazer um mimo além das fraldas, aqui vão algumas ideias:',
+    subtitulo: 'Sugestão de mimo além das fraldas, aqui vão algumas ideias:',
     voltar: 'Voltar para o convite',
     // << EDITE AQUI >> itens da lista (icone: lencos | pomada | roupinha | banho | brinquedo | coracao)
     lista: [

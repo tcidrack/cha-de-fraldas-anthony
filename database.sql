@@ -158,7 +158,65 @@ END;
 $$;
 
 
--- ── 7. RLS e permissões ───────────────────────────────────────
+-- ── 7. Manter o contador em dia ao apagar/editar linhas ───────
+-- `usadas` é um contador guardado (é ele que permite a reserva
+-- atômica no bloco 5). Sem este trigger, apagar uma confirmação na
+-- mão deixa a vaga "presa": a linha some, mas o contador não baixa.
+--
+-- Só dispara em DELETE e UPDATE. Em INSERT não pode disparar, senão
+-- contaria dobrado — a função confirmar_presenca já incrementa antes
+-- de inserir.
+
+CREATE OR REPLACE FUNCTION public.sincronizar_vagas()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    IF OLD.tamanho_fralda IS NOT NULL THEN
+      UPDATE public.vagas_fralda
+         SET usadas = greatest(usadas - 1, 0)
+       WHERE tamanho = OLD.tamanho_fralda;
+    END IF;
+    RETURN OLD;
+  END IF;
+
+  IF OLD.tamanho_fralda IS DISTINCT FROM NEW.tamanho_fralda THEN
+    IF OLD.tamanho_fralda IS NOT NULL THEN
+      UPDATE public.vagas_fralda
+         SET usadas = greatest(usadas - 1, 0)
+       WHERE tamanho = OLD.tamanho_fralda;
+    END IF;
+    IF NEW.tamanho_fralda IS NOT NULL THEN
+      UPDATE public.vagas_fralda
+         SET usadas = usadas + 1
+       WHERE tamanho = NEW.tamanho_fralda;
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_sincronizar_vagas ON public.confirmacoes_cha_anthony;
+CREATE TRIGGER trg_sincronizar_vagas
+  AFTER DELETE OR UPDATE ON public.confirmacoes_cha_anthony
+  FOR EACH ROW EXECUTE FUNCTION public.sincronizar_vagas();
+
+
+-- ── 8. Ressincronizar o contador agora ────────────────────────
+-- Recalcula `usadas` a partir das linhas que realmente existem.
+-- Corrige qualquer divergência anterior ao trigger. Rodar de novo
+-- é inofensivo.
+
+UPDATE public.vagas_fralda v
+   SET usadas = (SELECT count(*)
+                   FROM public.confirmacoes_cha_anthony c
+                  WHERE c.tamanho_fralda = v.tamanho);
+
+
+-- ── 9. RLS e permissões ───────────────────────────────────────
 
 ALTER TABLE public.confirmacoes_cha_anthony ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.vagas_fralda             ENABLE ROW LEVEL SECURITY;
@@ -187,7 +245,7 @@ GRANT EXECUTE ON FUNCTION public.confirmar_presenca(TEXT, TEXT) TO anon;
 GRANT EXECUTE ON FUNCTION public.atualizar_vagas(TEXT, JSONB)   TO anon;
 
 
--- ── 8. Conferir o estado ──────────────────────────────────────
+-- ── 10. Conferir o estado ─────────────────────────────────────
 --
 -- SELECT * FROM public.vagas_fralda ORDER BY ordem;
 --
@@ -199,15 +257,11 @@ GRANT EXECUTE ON FUNCTION public.atualizar_vagas(TEXT, JSONB)   TO anon;
 --    AND tablename IN ('confirmacoes_cha_anthony','vagas_fralda','config_admin');
 
 
--- ── 9. Limpeza de teste ───────────────────────────────────────
--- Apaga confirmações de teste e ressincroniza o contador `usadas`
--- a partir das linhas que realmente existem.
+-- ── 11. Limpeza de teste ──────────────────────────────────────
+-- Com o trigger do bloco 7 no lugar, apagar a linha já devolve a vaga
+-- sozinho — não precisa mais mexer no contador na mão.
 --
 -- DELETE FROM public.confirmacoes_cha_anthony WHERE nome ILIKE 'TESTE%';
---
--- UPDATE public.vagas_fralda v
---    SET usadas = (SELECT count(*) FROM public.confirmacoes_cha_anthony c
---                   WHERE c.tamanho_fralda = v.tamanho);
 
 
 -- ── Nota ──────────────────────────────────────────────────────
