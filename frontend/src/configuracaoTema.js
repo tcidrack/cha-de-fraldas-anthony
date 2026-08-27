@@ -12,7 +12,7 @@ export const tema = {
   tituloFita: 'Chá de Fraldas',
 
   // << EDITE AQUI >> nome do bebe (fonte cursiva grande)
-  nomeBebe: 'Anthony',
+  nomeBebe: 'Cidrack',
 
   // << EDITE AQUI >> mensagem do convite
   mensagemConvite:
@@ -20,8 +20,8 @@ export const tema = {
 
   // << EDITE AQUI >> data e hora do evento
   dataEvento: {
-    dia: '06',
-    mes: 'Julho',
+    dia: '30',
+    mes: 'Agosto',
     ano: '2026',
     hora: '16',
     minuto: '00',
@@ -51,9 +51,9 @@ export const tema = {
     // vazio mantem o bloco oculto.
     pix: {
       // << EDITE AQUI >> chave e nome de quem recebe
-      chave: '',
+      chave: '11111111111',
       tipo: 'CPF',        // rotulo ao lado da chave: CPF, Telefone, E-mail...
-      recebedor: '',      // nome do recebedor, para o convidado conferir
+      recebedor: 'Cidrack Dev',      // nome do recebedor, para o convidado conferir
       titulo: 'Prefere mandar um mimo em dinheiro?',
       descricao: 'Toda ajuda é bem-vinda! Se preferir, envie pelo Pix:',
       textoCopiar: 'Copiar chave',
@@ -80,10 +80,10 @@ export const tema = {
 
   calendario: {
     // << EDITE AQUI >> endereco, link do maps e horarios
-    endereco: 'Loteamento Belas Artes, bairro Mosquito - Agronômica',
-    mapsUrl: 'https://maps.google.com/?q=Loteamento+Belas+Artes',
-    eventoNome: 'Chá de Fraldas do Anthony',
-    dataInicio: '16:00 06/07/2026', // formato HH:MM DD/MM/AAAA
+    endereco: 'R. Dídimo Cidrack - Novo Maranguape I',
+    mapsUrl: 'https://maps.app.goo.gl/vZKjEXMyEUNUEiUJ9',
+    eventoNome: 'Chá de Fraldas do Cidrack',
+    dataInicio: '16:00 30/08/2026', // formato HH:MM DD/MM/AAAA
     dataFim: '', // opcional; vazio usa o mesmo horario de inicio
   },
 
