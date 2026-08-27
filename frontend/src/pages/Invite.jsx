@@ -1,8 +1,9 @@
 import { useState, useCallback } from "react"
 import { Link } from "react-router-dom"
 import { supabase } from "../services/supabase"
-import { tema, criarUrlCalendario } from "../configuracaoTema"
-import { IconePin, IconeCheck, IconePresente } from "../componentes/Icones"
+import { tema } from "../configuracaoTema"
+import { criarUrlCalendario, baixarIcs } from "../calendario"
+import { IconePin, IconeCheck, IconePresente, IconeAgenda } from "../componentes/Icones"
 
 const urlMaps = tema.calendario.mapsUrl
 const urlCalendario = criarUrlCalendario(tema)
@@ -92,11 +93,6 @@ export default function Invite() {
     setNome("")
     setTamanho("")
     setMostrarConfirmacao(false)
-    try {
-      window.open(urlCalendario, "_blank")
-    } catch (e) {
-      console.info("Não foi possível abrir calendário:", e)
-    }
   }
 
   async function confirmar() {
@@ -186,10 +182,23 @@ export default function Invite() {
           </a>
 
           {jaConfirmado ? (
-            <div className="acao-confirmar confirmado">
-              <IconeCheck preenchido />
-              <span>Presença confirmada!</span>
-            </div>
+            <>
+              <div className="acao-confirmar confirmado">
+                <IconeCheck preenchido />
+                <span>Presença confirmada!</span>
+              </div>
+              <button
+                type="button"
+                className="acao-calendario"
+                onClick={() => baixarIcs(tema, "cha-de-fraldas.ics")}
+              >
+                <IconeAgenda />
+                <span>Adicionar ao calendário</span>
+              </button>
+              <a href={urlCalendario} target="_blank" rel="noreferrer" className="link-agenda">
+                ou abrir no Google Agenda
+              </a>
+            </>
           ) : (
             <button type="button" className="acao-confirmar" onClick={abrirConfirmacao}>
               <IconeCheck />

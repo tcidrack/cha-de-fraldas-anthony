@@ -91,20 +91,3 @@ export const tema = {
   tabelaConfirmacoes: 'confirmacoes_cha_anthony',
   tabelaVagas: 'vagas_fralda',
 }
-
-function converterDataGoogle(dataBR) {
-  if (!dataBR) return '';
-  const [horaMinuto, data] = dataBR.split(' ');
-  const [hora, minuto] = horaMinuto.split(':');
-  const [dia, mes, ano] = data.split('/');
-  return `${ano}${mes}${dia}T${hora}${minuto}00`;
-}
-
-export function criarUrlCalendario(tema) {
-  if (!tema.calendario.dataInicio) return '#';
-  const nomeCodificado = encodeURIComponent(tema.calendario.eventoNome || tema.nomeBebe);
-  const enderecoCodificado = encodeURIComponent(tema.calendario.endereco);
-  const dataInicio = converterDataGoogle(tema.calendario.dataInicio);
-  const dataFim = tema.calendario.dataFim ? converterDataGoogle(tema.calendario.dataFim) : dataInicio;
-  return `https://www.google.com/calendar/render?action=TEMPLATE&text=${nomeCodificado}&dates=${dataInicio}/${dataFim}&location=${enderecoCodificado}`;
-}
