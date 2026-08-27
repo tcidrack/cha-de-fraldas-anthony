@@ -12,7 +12,7 @@ export const tema = {
   tituloFita: 'Chá de Fraldas',
 
   // << EDITE AQUI >> nome do bebe (fonte cursiva grande)
-  nomeBebe: 'Cidrack Dev',
+  nomeBebe: 'Anthony',
 
   // << EDITE AQUI >> mensagem do convite
   mensagemConvite:
@@ -20,8 +20,8 @@ export const tema = {
 
   // << EDITE AQUI >> data e hora do evento
   dataEvento: {
-    dia: '30',
-    mes: 'Agosto',
+    dia: '06',
+    mes: 'Julho',
     ano: '2026',
     hora: '16',
     minuto: '00',
@@ -45,8 +45,8 @@ export const tema = {
 
   calendario: {
     // << EDITE AQUI >> endereco, link do maps e horarios
-    endereco: 'R. Dídimo Cidrack - Novo Maranguape I',
-    mapsUrl: 'https://maps.app.goo.gl/1R6zk1j6S6UA2NGA7',
+    endereco: 'Loteamento Belas Artes, bairro Mosquito - Agronômica',
+    mapsUrl: 'https://maps.google.com/?q=Loteamento+Belas+Artes',
     eventoNome: 'Chá de Fraldas do Anthony',
     dataInicio: '16:00 06/07/2026', // formato HH:MM DD/MM/AAAA
     dataFim: '', // opcional; vazio usa o mesmo horario de inicio
