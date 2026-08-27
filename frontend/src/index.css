@@ -357,6 +357,103 @@ body {
   padding-bottom: 2px;
 }
 
+/* --- chave Pix na pagina de mimos --- */
+.pix {
+  margin-top: 22px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1.5px solid var(--verde-selo);
+  border-radius: 18px;
+  padding: 18px 16px;
+  text-align: center;
+}
+
+.pix-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pix-cabecalho .icone {
+  color: var(--oliva);
+  width: 1.5em;
+  height: 1.5em;
+  flex-shrink: 0;
+}
+
+.pix-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--oliva-escuro);
+  line-height: 1.25;
+}
+
+.pix-descricao {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--marrom-texto);
+  margin: 8px 0 12px;
+}
+
+.pix-caixa {
+  background: var(--branco);
+  border: 1.5px dashed var(--verde-selo);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.pix-tipo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--oliva);
+}
+
+/* Monoespacada facilita conferir a chave caractere a caractere; o
+   overflow-wrap segura uma chave aleatoria de 36 caracteres sem
+   estourar o card de 390px. */
+.pix-chave {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--oliva-escuro);
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+  user-select: all;
+}
+
+.pix-recebedor {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--marrom-texto);
+  margin-top: 8px;
+}
+
+.pix-copiar {
+  margin-top: 12px;
+  width: 100%;
+  background: var(--oliva);
+  color: var(--branco);
+  font-family: var(--fonte-corpo);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.pix-copiar:hover {
+  background: var(--oliva-escuro);
+}
+
 /* --- seletor de tamanho de fralda (modal) --- */
 .fraldas {
   margin: 4px 0 16px;
@@ -731,7 +828,7 @@ body {
 
 .envelope-aba {
   position: absolute;
-  top: 52px;
+  top: 48px;
   left: 0;
   width: 100%;
   height: 140px;
@@ -760,7 +857,7 @@ body {
 
 .selo {
   position: absolute;
-  top: 108px;
+  top: 104px;
   left: 50%;
   transform: translateX(-50%);
   width: 66px;

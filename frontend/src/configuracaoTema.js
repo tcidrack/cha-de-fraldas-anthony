@@ -45,6 +45,20 @@ export const tema = {
       { id: 5, icone: 'brinquedo', texto: 'Mordedor ou chocalho' },
       { id: 6, icone: 'coracao',   texto: 'Ou o mimo que o seu coração mandar' },
     ],
+
+    // Chave Pix, para quem preferir mandar um valor.
+    // A secao so aparece no site quando `chave` estiver preenchida —
+    // vazio mantem o bloco oculto.
+    pix: {
+      // << EDITE AQUI >> chave e nome de quem recebe
+      chave: '',
+      tipo: 'CPF',        // rotulo ao lado da chave: CPF, Telefone, E-mail...
+      recebedor: '',      // nome do recebedor, para o convidado conferir
+      titulo: 'Prefere mandar um mimo em dinheiro?',
+      descricao: 'Toda ajuda é bem-vinda! Se preferir, envie pelo Pix:',
+      textoCopiar: 'Copiar chave',
+      textoCopiado: 'Chave copiada!',
+    },
   },
 
   // Textos do seletor de tamanho no modal de confirmacao
