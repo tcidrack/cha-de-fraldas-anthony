@@ -43,6 +43,23 @@ E crie a tabela no Supabase rodando o **`database.sql`** que está na raiz do pr
 
 O nome da tabela também está em `src/configuracaoTema.js` (`tabelaConfirmacoes`).
 
+## Deploy (Vercel)
+
+O projeto é `cha-de-fraldas-anthony`, conectado ao repositório: todo push na `main`
+gera um deploy novo sozinho.
+
+Se precisar recriar o projeto do zero, três coisas não podem faltar:
+
+1. **Root Directory = `frontend`** — o repositório tem o app dentro dessa pasta, não na raiz.
+2. **As duas variáveis de ambiente**, em Production, Preview e Development:
+   `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` (o `.env` não vai para o repositório).
+3. O `vercel.json` desta pasta, que faz o rewrite de SPA — sem ele, abrir `/convite` ou
+   `/admin` direto pela URL (ou dar F5 nelas) devolve 404.
+
+Atenção à ordem: cadastre as variáveis **antes** do primeiro build. O Vite substitui
+`import.meta.env.VITE_*` em tempo de build, então um build feito sem elas gera um site que
+nunca conversa com o Supabase — e sem erro visível, porque o app cai no `localStorage`.
+
 ## Imagens
 
 Ficam em `public/assets/`. Os caminhos estão em `src/configuracaoTema.js`
