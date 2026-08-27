@@ -1,38 +1,31 @@
-import { useState } from "react"
+import { useState, useCallback } from "react"
+import { Link } from "react-router-dom"
 import { supabase } from "../services/supabase"
 import { tema, criarUrlCalendario } from "../configuracaoTema"
+import { IconePin, IconeCheck, IconePresente } from "../componentes/Icones"
 
 const urlMaps = tema.calendario.mapsUrl
 const urlCalendario = criarUrlCalendario(tema)
-const TABELA = tema.tabelaConfirmacoes
+const TABELA_VAGAS = tema.tabelaVagas
 const CHAVE_LOCAL = "confirmado_cha_fraldas"
 
-// Icones em SVG inline: evitam depender de uma fonte de icones externa,
-// que quando nao carrega aparece como texto cru ("location_on") na tela.
-function IconePin() {
-  return (
-    <svg className="icone icone-solido" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
-    </svg>
-  )
+// Mensagens das exceções levantadas pela função confirmar_presenca no banco.
+const ERROS = {
+  NOME_VAZIO: ["error", "Digite seu nome 💖"],
+  NOME_DUPLICADO: ["error", "Já há confirmação para este nome"],
+  TAMANHO_OBRIGATORIO: ["error", "Escolha um tamanho de fralda"],
+  TAMANHO_ESGOTADO: ["error", "Esse tamanho acabou de esgotar — escolha outro"],
 }
 
-function IconeCheck({ preenchido = false }) {
-  return preenchido ? (
-    <svg className="icone icone-solido" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 14.6-4.2-4.2 1.4-1.4 2.8 2.8 5.2-5.2 1.4 1.4-6.6 6.6z" />
-    </svg>
-  ) : (
-    <svg className="icone" viewBox="0 0 24 24" aria-hidden="true" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="9" />
-      <path d="m8 12.3 2.7 2.7L16 9.7" />
-    </svg>
-  )
+function lerErro(mensagem) {
+  const chave = Object.keys(ERROS).find((k) => (mensagem || "").includes(k))
+  return chave ? { chave, toast: ERROS[chave] } : null
 }
 
 export default function Invite() {
   const [nome, setNome] = useState("")
+  const [tamanho, setTamanho] = useState("")
+  const [vagas, setVagas] = useState(null) // null = ainda nao carregou
   const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false)
   const [confirmando, setConfirmando] = useState(false)
   const [toast, setToast] = useState(null)
@@ -40,10 +33,48 @@ export default function Invite() {
     () => localStorage.getItem(CHAVE_LOCAL) !== null
   )
 
-  function salvarLocalmente(nomeConfirmado) {
+  const tudoEsgotado = vagas !== null && vagas.every((v) => v.restam === 0)
+
+  const carregarVagas = useCallback(async () => {
+    if (!supabase) {
+      // Sem Supabase configurado: mostra os tamanhos padrão, todos livres.
+      setVagas(tema.fraldas.tamanhosPadrao.map((t) => ({ tamanho: t, restam: null })))
+      return
+    }
+    const { data, error } = await supabase
+      .from(TABELA_VAGAS)
+      .select("tamanho, limite, usadas, ordem")
+      .order("ordem")
+
+    if (error || !data) {
+      console.error("Erro ao carregar vagas:", error)
+      setVagas(tema.fraldas.tamanhosPadrao.map((t) => ({ tamanho: t, restam: null })))
+      return
+    }
+    setVagas(
+      data.map((v) => ({ tamanho: v.tamanho, restam: Math.max(v.limite - v.usadas, 0) }))
+    )
+  }, [])
+
+  function abrirConfirmacao() {
+    setMostrarConfirmacao(true)
+    setTamanho("")
+    setVagas(null)
+    carregarVagas()
+  }
+
+  function salvarLocalmente(nomeConfirmado, tamanhoEscolhido) {
     try {
       const listaAtual = JSON.parse(localStorage.getItem("confirmacoes") || "[]")
-      const atualizado = [...listaAtual, { id: Date.now(), nome: nomeConfirmado, createdAt: new Date().toISOString() }]
+      const atualizado = [
+        ...listaAtual,
+        {
+          id: Date.now(),
+          nome: nomeConfirmado,
+          tamanho_fralda: tamanhoEscolhido || null,
+          createdAt: new Date().toISOString(),
+        },
+      ]
       localStorage.setItem("confirmacoes", JSON.stringify(atualizado))
     } catch (err) {
       console.error("Erro ao salvar localmente:", err)
@@ -59,11 +90,12 @@ export default function Invite() {
     localStorage.setItem(CHAVE_LOCAL, nomeConfirmado)
     setJaConfirmado(true)
     setNome("")
+    setTamanho("")
     setMostrarConfirmacao(false)
     try {
-      window.open(urlCalendario, '_blank')
+      window.open(urlCalendario, "_blank")
     } catch (e) {
-      console.info('Não foi possível abrir calendário:', e)
+      console.info("Não foi possível abrir calendário:", e)
     }
   }
 
@@ -73,52 +105,52 @@ export default function Invite() {
       showToast("error", "Digite seu nome 💖")
       return
     }
+    if (!tamanho && !tudoEsgotado) {
+      showToast("error", "Escolha um tamanho de fralda")
+      return
+    }
+
     setConfirmando(true)
     try {
       if (!supabase) {
-        salvarLocalmente(nomeTrim)
+        salvarLocalmente(nomeTrim, tamanho)
         finalizarConfirmacao(nomeTrim)
         showToast("success", "Presença confirmada!")
         return
       }
 
-      const { data: existentes, error: erroConsulta } = await supabase
-        .from(TABELA)
-        .select('nome')
-        .eq('nome', nomeTrim)
-
-      if (erroConsulta) {
-        console.error('Erro ao consultar confirmações:', erroConsulta)
-        salvarLocalmente(nomeTrim)
-        showToast('info', 'Problema ao validar confirmação — salvo localmente')
-        setNome('')
-        setMostrarConfirmacao(false)
-        return
-      }
-
-      if (existentes && existentes.length > 0) {
-        showToast('error', 'Já há confirmação para este nome')
-        setNome('')
-        setMostrarConfirmacao(false)
-        return
-      }
-
-      const { error: erroInsercao } = await supabase.from(TABELA).insert({
-        nome: nomeTrim
+      // A reserva da vaga e a inserção acontecem juntas dentro da função,
+      // numa transação só — é o que impede dois convidados simultâneos de
+      // pegarem a mesma última vaga.
+      const { error } = await supabase.rpc("confirmar_presenca", {
+        p_nome: nomeTrim,
+        p_tamanho: tamanho || null,
       })
 
-      if (erroInsercao) {
-        console.error('Erro ao salvar confirmação:', erroInsercao)
-        salvarLocalmente(nomeTrim)
-        showToast('info', 'Não foi possível salvar no servidor — salvo localmente 👍')
-      } else {
-        finalizarConfirmacao(nomeTrim)
-        showToast('success', 'Presença confirmada!')
+      if (error) {
+        const conhecido = lerErro(error.message)
+        if (conhecido) {
+          showToast(...conhecido.toast)
+          if (conhecido.chave === "TAMANHO_ESGOTADO") {
+            setTamanho("")
+            carregarVagas()
+          }
+          return
+        }
+        console.error("Erro ao confirmar presença:", error)
+        salvarLocalmente(nomeTrim, tamanho)
+        showToast("info", "Não foi possível salvar no servidor — salvo localmente 👍")
+        setNome("")
+        setMostrarConfirmacao(false)
+        return
       }
+
+      finalizarConfirmacao(nomeTrim)
+      showToast("success", "Presença confirmada!")
     } catch (error) {
-      console.error('Erro ao confirmar presença:', error)
-      salvarLocalmente(nomeTrim)
-      showToast('info', 'Erro inesperado — salvo localmente')
+      console.error("Erro ao confirmar presença:", error)
+      salvarLocalmente(nomeTrim, tamanho)
+      showToast("info", "Erro inesperado — salvo localmente")
     } finally {
       setConfirmando(false)
     }
@@ -159,11 +191,16 @@ export default function Invite() {
               <span>Presença confirmada!</span>
             </div>
           ) : (
-            <button type="button" className="acao-confirmar" onClick={() => setMostrarConfirmacao(true)}>
+            <button type="button" className="acao-confirmar" onClick={abrirConfirmacao}>
               <IconeCheck />
               <span>Confirmar presença</span>
             </button>
           )}
+
+          <Link to="/mimos" className="acao-mimos">
+            <IconePresente />
+            <span>{tema.mimos.textoBotao}</span>
+          </Link>
 
           <div className="presentes-inline">
             <span className="presentes-titulo">{tema.sugestoesPresente.titulo}</span>
@@ -183,16 +220,62 @@ export default function Invite() {
             <h2>Confirme sua presença</h2>
             <p>Digite seu nome e sobrenome ou da sua família para aparecer na lista de convidados confirmados.</p>
             <input placeholder="Seu nome" value={nome} onChange={(e) => setNome(e.target.value)} />
-            <button className="btn-confirmar" onClick={confirmar} disabled={confirmando}>
+
+            <div className="fraldas">
+              <p className="fraldas-pergunta">{tema.fraldas.pergunta}</p>
+
+              {vagas === null && <p className="fraldas-ajuda">Carregando tamanhos...</p>}
+
+              {vagas !== null && tudoEsgotado && (
+                <p className="fraldas-aviso">{tema.fraldas.esgotadoTudo}</p>
+              )}
+
+              {vagas !== null && !tudoEsgotado && (
+                <>
+                  <div className="fraldas-opcoes">
+                    {vagas.map((v) => {
+                      const esgotado = v.restam === 0
+                      return (
+                        <button
+                          key={v.tamanho}
+                          type="button"
+                          disabled={esgotado}
+                          onClick={() => setTamanho(v.tamanho)}
+                          className={
+                            "fralda-chip" +
+                            (tamanho === v.tamanho ? " selecionado" : "") +
+                            (esgotado ? " esgotado" : "")
+                          }
+                        >
+                          <span className="fralda-tamanho">{v.tamanho}</span>
+                          <span className="fralda-restam">
+                            {esgotado
+                              ? "esgotado"
+                              : v.restam === null
+                                ? ""
+                                : `restam ${v.restam}`}
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                  <p className="fraldas-ajuda">{tema.fraldas.ajuda}</p>
+                </>
+              )}
+            </div>
+
+            <button
+              className="btn-confirmar"
+              onClick={confirmar}
+              disabled={confirmando || vagas === null || (!tamanho && !tudoEsgotado)}
+            >
               {confirmando ? "Confirmando..." : "Confirmar presença"}
             </button>
           </div>
         </div>
       )}
 
-      {toast && (
-        <div className={`toast toast-${toast.type}`}>{toast.text}</div>
-      )}
+      {toast && <div className={`toast toast-${toast.type}`}>{toast.text}</div>}
     </div>
   )
 }

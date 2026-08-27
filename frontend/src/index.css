@@ -286,6 +286,296 @@ body {
   text-align: center;
 }
 
+
+/* --- botao secundario: sugestoes de mimos --- */
+.acao-mimos {
+  margin: 10px auto 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--oliva-escuro);
+  font-family: var(--fonte-corpo);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px 22px;
+  border: 1.5px solid var(--oliva);
+  border-radius: 999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.acao-mimos:hover {
+  background: var(--verde-selo);
+}
+
+.acao-mimos .icone {
+  color: var(--oliva);
+}
+
+/* --- pagina de mimos --- */
+.mimos {
+  position: relative;
+  z-index: 2;
+  padding: 34px 22px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.mimos-titulo {
+  font-family: var(--fonte-nome);
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 1.1;
+  color: var(--oliva);
+  text-align: center;
+}
+
+.mimos-subtitulo {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--marrom-texto);
+  text-align: center;
+  margin: 10px 0 22px;
+}
+
+.mimos-lista {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mimo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1.5px solid var(--verde-selo);
+  border-radius: 16px;
+  padding: 13px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--oliva-escuro);
+}
+
+.mimo .icone {
+  color: var(--oliva);
+  width: 1.7em;
+  height: 1.7em;
+}
+
+.mimos-voltar {
+  margin: 26px auto 0;
+  display: inline-block;
+  color: var(--oliva);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--verde-selo);
+  padding-bottom: 2px;
+}
+
+/* --- seletor de tamanho de fralda (modal) --- */
+.fraldas {
+  margin: 4px 0 16px;
+  text-align: left;
+}
+
+.fraldas-pergunta {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--oliva-escuro);
+  margin-bottom: 8px;
+}
+
+.fraldas-opcoes {
+  display: flex;
+  gap: 8px;
+}
+
+.fralda-chip {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--branco);
+  border: 1.5px solid var(--creme-escuro);
+  border-radius: 14px;
+  padding: 9px 4px;
+  font-family: var(--fonte-corpo);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.fralda-chip:hover:not(.esgotado) {
+  border-color: var(--oliva);
+}
+
+.fralda-chip.selecionado {
+  background: var(--verde-selo);
+  border-color: var(--oliva);
+}
+
+.fralda-chip.esgotado {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.fralda-tamanho {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--oliva-escuro);
+  line-height: 1;
+}
+
+.fralda-restam {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--marrom-texto);
+}
+
+.fraldas-ajuda {
+  font-size: 12px !important;
+  color: var(--marrom-texto);
+  margin: 8px 0 0 !important;
+  text-align: center;
+}
+
+.fraldas-aviso {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--oliva-escuro) !important;
+  background: var(--verde-selo);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 0 !important;
+  text-align: center;
+}
+
+/* --- admin: resumo e editor de cotas --- */
+.admin-resumo {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.admin-resumo-item {
+  flex: 1;
+  background: var(--verde-selo);
+  border-radius: 14px;
+  padding: 10px 4px;
+  text-align: center;
+}
+
+.admin-resumo-tamanho {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--oliva-escuro);
+  line-height: 1;
+}
+
+.admin-resumo-num {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--oliva);
+}
+
+.admin-card li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.admin-tag {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.admin-cotas {
+  margin-top: 22px;
+  border-top: 1.5px solid var(--verde-selo);
+  padding-top: 18px;
+}
+
+.admin-cotas h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--oliva-escuro);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.admin-cotas-campos {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.admin-cota {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--oliva-escuro);
+}
+
+.admin-cotas input,
+.admin-cotas button {
+  width: 100%;
+  font-family: var(--fonte-corpo);
+  font-size: 15px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--creme-escuro);
+}
+
+.admin-cota input {
+  text-align: center;
+  font-weight: 700;
+  color: var(--oliva-escuro);
+}
+
+.admin-cotas > input {
+  margin-bottom: 10px;
+}
+
+.admin-cotas button {
+  background: var(--oliva);
+  color: var(--branco);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-cotas button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.admin-ok {
+  color: var(--oliva);
+  font-weight: 600;
+  text-align: center;
+  margin-top: 8px;
+}
+
 /* ============================ MODAL ============================ */
 
 .modal-overlay {

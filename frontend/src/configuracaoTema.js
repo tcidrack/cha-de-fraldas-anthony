@@ -30,11 +30,38 @@ export const tema = {
   // << EDITE AQUI >> bloco de sugestoes de presente
   sugestoesPresente: {
     titulo: 'Sugestões de presente',
-    texto: 'Fraldas P, M e G',
+    texto: 'Fraldas P, M e G e Mimo',
   },
 
   // << EDITE AQUI >> despedida no rodape do convite
   mensagemFinal: 'Espero por você!',
+
+  // Pagina /mimos, aberta pelo botao "Sugestoes de mimos"
+  mimos: {
+    textoBotao: 'Sugestões de mimos',
+    titulo: 'Sugestões de mimos',
+    subtitulo: 'Se quiser trazer um mimo além das fraldas, aqui vão algumas ideias:',
+    voltar: 'Voltar para o convite',
+    // << EDITE AQUI >> itens da lista (icone: lencos | pomada | roupinha | banho | brinquedo | coracao)
+    lista: [
+      { id: 1, icone: 'lencos',    texto: 'Lenços umedecidos' },
+      { id: 2, icone: 'pomada',    texto: 'Pomada para assaduras' },
+      { id: 3, icone: 'roupinha',  texto: 'Roupinhas de 0 a 3 meses' },
+      { id: 4, icone: 'banho',     texto: 'Sabonete e shampoo infantil' },
+      { id: 5, icone: 'brinquedo', texto: 'Mordedor ou chocalho' },
+      { id: 6, icone: 'coracao',   texto: 'Ou o mimo que o seu coração mandar' },
+    ],
+  },
+
+  // Textos do seletor de tamanho no modal de confirmacao
+  fraldas: {
+    pergunta: 'Qual tamanho de fralda você vai levar?',
+    ajuda: 'Cada tamanho tem uma quantidade limitada, para não faltar nem sobrar.',
+    esgotadoTudo: 'As fraldas já foram todas reservadas! Você ainda pode confirmar sua presença.',
+    // Usado so como reserva, se a leitura das vagas no banco falhar.
+    // A fonte de verdade e a tabela `vagas_fralda`.
+    tamanhosPadrao: ['P', 'M', 'G'],
+  },
 
   recursos: {
     fundo: '/assets/fundo-de-tela.jpg',
@@ -52,8 +79,9 @@ export const tema = {
     dataFim: '', // opcional; vazio usa o mesmo horario de inicio
   },
 
-  // Tabela do Supabase que guarda as confirmacoes de presenca
+  // Tabelas do Supabase
   tabelaConfirmacoes: 'confirmacoes_cha_anthony',
+  tabelaVagas: 'vagas_fralda',
 }
 
 function converterDataGoogle(dataBR) {
