@@ -291,44 +291,6 @@ body {
   color: var(--oliva);
 }
 
-/* --- opcoes de calendario, apos confirmar presenca --- */
-.acao-calendario {
-  margin: 10px auto 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.6);
-  color: var(--oliva-escuro);
-  font-family: var(--fonte-corpo);
-  font-size: 15px;
-  font-weight: 600;
-  padding: 11px 22px;
-  border: 1.5px solid var(--oliva);
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.acao-calendario:hover {
-  background: var(--verde-selo);
-}
-
-.acao-calendario .icone {
-  color: var(--oliva);
-}
-
-.link-agenda {
-  display: block;
-  margin: 8px auto 0;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--marrom-texto);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 /* --- pagina de mimos --- */
 .mimos {
   position: relative;
